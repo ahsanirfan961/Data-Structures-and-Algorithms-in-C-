@@ -18,6 +18,7 @@ public:
     static void bubbleSort(int array[], int length);
     static void bubbleSort(SinglyLinkedListNode& list);
     static void cycleSort(int array[], int length);
+    static void countingSort(int array[], int length);
     static void pancakeSort(int array[], int length);
     static void insertionSort(int array[], int length);
     static void selectionSort(int array[], int length);

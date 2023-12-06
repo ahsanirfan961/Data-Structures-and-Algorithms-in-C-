@@ -142,6 +142,28 @@ void Sort::bucketSort(int *array, int length) {
 
 }
 
+void Sort::countingSort(int *array, int length) {
+    const int max = Array::maxElement(array, length);
+    int count[max+1];
+    for(int& i : count)
+        i = 0;
+    for(int i=0;i<length;i++)
+        count[array[i]]++;
+
+    for(int i=0, j=0;i<=max;)
+    {
+        if(count[i]>0)
+        {
+            array[j++] = i;
+            count[i]--;
+        }
+
+        else
+            i++;
+    }
+
+}
+
 /* Implementation of Print Class*/
 
 void Print::printArray(int *array, int length) {

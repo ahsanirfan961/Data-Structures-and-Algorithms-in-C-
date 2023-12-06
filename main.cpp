@@ -27,7 +27,7 @@ int main()
 //    Print::printLinkedList(list);
 
     cout<<"Sorted Array: "<<endl;
-    Sort::bucketSort(a, ARR_LENGTH);
+    Sort::countingSort(a, ARR_LENGTH);
     Print::printArray(a, ARR_LENGTH);
 //    Sort::bubbleSort(list);
 //    Print::printLinkedList(list);
