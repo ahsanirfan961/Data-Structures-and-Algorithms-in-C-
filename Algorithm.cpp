@@ -3,10 +3,11 @@
 //
 #include "Algorithm.h"
 #include <cmath>
+#include <queue>
 
 /* Implementation of whole sort class*/
 
-void Sort::bubbleSort(int *array, int length) {
+__attribute__((unused)) void Sort::bubbleSort(int *array, int length) {
     for(int i=0;i<length;i++)
         for(int j=0;j<length-i-1;j++)
         {
@@ -15,8 +16,8 @@ void Sort::bubbleSort(int *array, int length) {
         }
 }
 
-void Sort::bubbleSort(SinglyLinkedListNode &list) {
-    SinglyLinkedListNode* p = &list;
+void Sort::bubbleSort(SinglyLinkedList &list) {
+    SinglyLinkedListNode* p = list.head;
     while(p!= nullptr)
     {
         SinglyLinkedListNode* q = p->next;
@@ -121,10 +122,10 @@ void Sort::bucketSort(int *array, int length) {
     const int min = Array::minElement(array, length);
     const int max = Array::maxElement(array, length);
     const int range = ceil((double)(max - min)/nBuckets);
-    SinglyLinkedListNode bucket[nBuckets];
+    SinglyLinkedList bucket[nBuckets];
 
     for(int i=0;i<length;i++)
-        SinglyLinkedListNode::pushBack(&bucket[(array[i]-min)/range], array[i]);
+        bucket[(array[i]-min)/range].pushBack(array[i]);
 
     for(auto & i : bucket)
         Sort::bubbleSort(i);
@@ -132,7 +133,7 @@ void Sort::bucketSort(int *array, int length) {
     int j=0;
     for(auto & i : bucket)
     {
-        SinglyLinkedListNode* p = i.next;
+        SinglyLinkedListNode* p = i.head->next;
         while(p!= nullptr)
         {
             array[j++] = p->data;
@@ -164,6 +165,42 @@ void Sort::countingSort(int *array, int length) {
 
 }
 
+void Sort::gnomeSort(int *array, int length) {
+    int index = 0;
+    while(index<length)
+    {
+        if(index==0)
+            index++;
+        if(array[index]>=array[index-1])
+            index++;
+        else
+        {
+            Utility::swap(array[index], array[index-1]);
+            index--;
+        }
+    }
+}
+
+void Sort::pigeonHoleSort(int *array, int length) {
+    const int min = Array::minElement(array, length);
+    const int max = Array::maxElement(array, length);
+    const int range = max-min+1;
+
+    // making array of (queues of size 10) of size range
+    auto* holes = new Queue[range];
+    for(int i=0;i<range;i++)
+        holes[i] = Queue(10);
+
+    for(int i=0;i<length;i++)
+        holes[array[i]-min].enqueue(array[i]);
+
+    for(int i=0, k=0;i<range;i++)
+    {
+        while(!holes[i].isEmpty())
+            array[k++] = holes[i].dequeue();
+    }
+}
+
 /* Implementation of Print Class*/
 
 void Print::printArray(int *array, int length) {
@@ -172,8 +209,8 @@ void Print::printArray(int *array, int length) {
     cout<<endl;
 }
 
-void Print::printLinkedList(SinglyLinkedListNode& head) {
-    SinglyLinkedListNode* p = &head;
+void Print::printLinkedList(SinglyLinkedList& list) {
+    SinglyLinkedListNode* p = list.head;
     while(p != nullptr)
     {
         cout<<p->data<<" ";
@@ -182,3 +219,59 @@ void Print::printLinkedList(SinglyLinkedListNode& head) {
     cout<<endl;
 }
 
+void Print::printQueue(Queue& queue) {
+    Queue temp(queue.getSize());
+    temp = queue;
+    while(!temp.isEmpty())
+        cout<<temp.dequeue()<<" ";
+    cout<<endl;
+}
+
+void Print::printArray(int **array, int width, int height) {
+    for(int i=0;i<width;i++)
+    {
+        for(int j=0;j<height;j++)
+            cout<<array[i][j]<<" ";
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+
+// Implementation of Screen Coloring Class
+
+void ScreenColoring::floodFill(int **screen, int width, int height, int pixelX, int pixelY, int newColor) {
+    queue<Vector2i> toFill;
+    Vector2i parent(pixelX, pixelY);
+    int prevColor = screen[pixelX][pixelY];
+
+    toFill.push(parent);
+
+    while(!toFill.empty())
+    {
+        Vector2i current = toFill.front();
+        toFill.pop();
+
+        screen[current.x][current.y] = newColor;
+
+        if (isValid(screen, width, height, current.x + 1, current.y, prevColor, newColor))
+            toFill.push(Vector2i(current.x + 1, current.y));
+
+        if (isValid(screen, width, height, current.x - 1, current.y, prevColor, newColor))
+            toFill.push(Vector2i(current.x - 1, current.y));
+
+        if (isValid(screen, width, height, current.x, current.y + 1, prevColor, newColor))
+            toFill.push(Vector2i(current.x, current.y + 1));
+
+        if (isValid(screen, width, height, current.x, current.y - 1, prevColor, newColor))
+            toFill.push(Vector2i(current.x, current.y - 1));
+
+    }
+}
+
+bool ScreenColoring::isValid(int **screen, int width, int height, int pixelX, int pixelY, int prevColor, int newColor) {
+
+    if(pixelX<0 || pixelX>=width || pixelY<0 || pixelY>=height || screen[pixelX][pixelY]==newColor || screen[pixelX][pixelY]!=prevColor)
+        return false;
+    return true;
+}

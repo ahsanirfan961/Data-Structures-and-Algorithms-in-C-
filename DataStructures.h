@@ -27,8 +27,41 @@ public:
 
     SinglyLinkedListNode():data(0), next(nullptr){}
     explicit SinglyLinkedListNode(int data):data(data), next(nullptr){}
+};
 
-    static void pushBack(SinglyLinkedListNode* head, int data);
+class SinglyLinkedList
+{
+public:
+    SinglyLinkedListNode* head;
+
+    SinglyLinkedList():head(nullptr){}
+    void pushBack(int data);
+    int length() const;
+};
+
+class Queue
+{
+    int* array{};
+    int front;
+    int rear;
+    int capacity;
+public:
+    Queue():front(0), rear(0), capacity(0){}
+    explicit Queue(int size);
+    ~Queue(){delete[] array;}
+    void operator=(const Queue&);
+    bool isEmpty() const;
+    bool isFull() const;
+    void enqueue(int data);
+    int dequeue();
+    int getSize();
+};
+
+struct Vector2i
+{
+    int x;
+    int y;
+    Vector2i(int x, int y):x(x), y(y){}
 };
 
 class Utility

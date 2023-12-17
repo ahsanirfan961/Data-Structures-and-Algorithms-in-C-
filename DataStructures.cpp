@@ -76,7 +76,7 @@ int Array::minElement(const int *array, int length) {
 
 // Implementation of Linked List Class
 
-void SinglyLinkedListNode::pushBack(SinglyLinkedListNode* head, int data) {
+void SinglyLinkedList::pushBack(int data) {
     auto* q = new SinglyLinkedListNode(data);
     auto* dummy = new SinglyLinkedListNode();
     dummy->next = head;
@@ -85,7 +85,73 @@ void SinglyLinkedListNode::pushBack(SinglyLinkedListNode* head, int data) {
         p=p->next;
     p->next = q;
     head = dummy->next;
+
+
 }
+
+int SinglyLinkedList::length() const {
+    SinglyLinkedListNode* p = head;
+    int c = 0;
+    while(p!= nullptr)
+    {
+        p=p->next;
+        c++;
+    }
+    return c;
+}
+
+// Implementation of queue class
+Queue::Queue(int size): capacity(size), front(size), rear(size)
+{
+    array = new int[capacity+1];
+    for(int i=0;i<=capacity;i++)
+        array[i]=0;
+}
+
+bool Queue::isEmpty() const {
+    return front==rear;
+}
+
+bool Queue::isFull() const {
+    return front==(rear+1)%(capacity+1);
+}
+
+void Queue::enqueue(int data) {
+    if(!isFull())
+    {
+        rear = (rear+1)%(capacity+1);
+        array[rear] = data;
+    } else
+        cout<<"Queue is Full!"<<endl;
+}
+
+int Queue::dequeue() {
+    if(!isEmpty())
+    {
+        front = (front+1)%(capacity+1);
+        return array[front];
+    }
+    else
+    {
+        cout<<"Queue is Empty!"<<endl;
+        return -1;
+    }
+}
+
+void Queue::operator=(Queue const& queue) {
+    front = queue.front;
+    rear = queue.rear;
+    capacity = queue.capacity;
+    delete[] array;
+    array = new int[capacity+1];
+    for(int i=0;i<=capacity;i++)
+        array[i] = queue.array[i];
+}
+
+int Queue::getSize() {
+    return capacity;
+}
+
 
 // Implementation of Utilities Class
 
