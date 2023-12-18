@@ -289,13 +289,13 @@ void Print::printBT(BTNode *root)
     for (auto & i : s)
         sprintf(i, "%80s", " ");
 
-    _print_t(root, 0, 0, 0, s);
+    printTree(root, 0, 0, 0, s);
 
     for (auto & i : s)
         printf("%s\n", i);
 }
 
-int Print::_print_t(BTNode *tree, int is_left, int offset, int depth, char (*s)[255])
+int Print::printTree(BTNode *tree, int is_left, int offset, int depth, char s[20][255])
 {
     char b[20];
     int width = 5;
@@ -304,8 +304,8 @@ int Print::_print_t(BTNode *tree, int is_left, int offset, int depth, char (*s)[
 
     sprintf(b, "(%03d)", tree->data);
 
-    int left  = _print_t(tree->left,  1, offset,                depth + 1, s);
-    int right = _print_t(tree->right, 0, offset + left + width, depth + 1, s);
+    int left  = printTree(tree->left, 1, offset, depth + 1, s);
+    int right = printTree(tree->right, 0, offset + left + width, depth + 1, s);
 
 #ifdef COMPACT
     for (int i = 0; i < width; i++)
