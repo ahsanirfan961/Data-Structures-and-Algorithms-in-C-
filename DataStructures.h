@@ -64,6 +64,22 @@ struct Vector2i
     Vector2i(int x, int y):x(x), y(y){}
 };
 
+class Stack
+{
+    friend class Print;
+    int *array;
+    int top;
+    int size;
+    int elements;
+public:
+    explicit Stack(int size);
+    void push(int data);
+    bool isFull() const;
+    bool isEmpty() const;
+    int pop();
+    int topElement();
+};
+
 class Utility
 {
 public:

@@ -201,6 +201,40 @@ void Sort::pigeonHoleSort(int *array, int length) {
     }
 }
 
+void Sort::bitonicSort(int *array, int length, int start, int dir) {
+    /* check if the log2(length) is a whole number else return*/
+    double temp = log2(length);
+    int temp2 = temp;
+    if(temp-temp2 != 0)
+    {
+        cout<<"The number of elements for bitonic sort must be of order 2^n"<<endl;
+        return;
+    }
+
+    if(length>1)
+    {
+        int middle = length/2;
+        bitonicSort(array, middle, start, 0);
+        bitonicSort(array, middle, start+middle, 1);
+
+        bitonicMerge(array, start, length, dir);
+    }
+}
+
+void Sort::bitonicMerge(int *array, int start, int length, int dir) {
+    if(length>1)
+    {
+        int middle = length/2;
+        for(int i=start;i<start+middle;i++)
+        {
+            if(dir==(array[i]<array[i+middle]))
+                Utility::swap(array[i], array[i+middle]);
+        }
+        bitonicMerge(array, start, middle, dir);
+        bitonicMerge(array, start+middle, middle, dir);
+    }
+}
+
 /* Implementation of Print Class*/
 
 void Print::printArray(int *array, int length) {
@@ -234,6 +268,12 @@ void Print::printArray(int **array, int width, int height) {
             cout<<array[i][j]<<" ";
         cout<<endl;
     }
+    cout<<endl;
+}
+
+void Print::printStack(Stack &stack) {
+    for(int i=0;i<=stack.top;i++)
+        cout<<stack.array[i]<<" ";
     cout<<endl;
 }
 

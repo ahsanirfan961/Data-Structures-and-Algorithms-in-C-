@@ -161,3 +161,46 @@ void Utility::swap(int& a, int& b)
     a = b;
     b = temp;
 }
+
+// Implementation of Stack data structure
+Stack::Stack(int size):top(-1), size(size), elements(0) {
+    array = new int[size];
+    for(int i=0;i<size;i++)
+        array[i]=0;
+}
+
+bool Stack::isFull() const {
+    return elements==size;
+}
+
+bool Stack::isEmpty() const {
+    return elements==0;
+}
+
+void Stack::push(int data) {
+    if(!isFull())
+    {
+        array[++top]=data;
+        elements++;
+    }
+    else
+        cout<<"Stack is full!"<<endl;
+}
+
+int Stack::pop() {
+    if(!isEmpty())
+    {
+        elements--;
+        return array[top--];
+    }
+    cout<<"Stack is empty!"<<endl;
+    return -1;
+}
+
+int Stack::topElement() {
+    if(!isEmpty())
+        return array[top];
+    cout<<"Stack is empty!"<<endl;
+    return -1;
+}
+

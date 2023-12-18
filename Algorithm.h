@@ -12,12 +12,14 @@ using namespace std;
 class SinglyLinkedListNode;
 class SinglyLinkedList;
 class Queue;
+class Stack;
 
 class Sort
 {
     static int Partition(int array[], int start, int end);
+    static void bitonicMerge(int array[], int start, int length, int dir);
 public:
-    __attribute__((unused)) static void bubbleSort(int array[], int length);
+    static void bubbleSort(int array[], int length);
     static void bubbleSort(SinglyLinkedList& list);
     static void cycleSort(int array[], int length);
     static void countingSort(int array[], int length);
@@ -29,6 +31,7 @@ public:
     static void bucketSort(int array[], int length);
     static void mergeSort(int array[], int length, int start=0, int end=-1);
     static void quickSort(int array[], int length, int start=0, int end=-9);
+    static void bitonicSort(int array[], int length, int start=0, int dir=0);
 };
 
 class ScreenColoring
@@ -48,6 +51,7 @@ public:
     static void printArray(int **array, int width, int height);
     static void printLinkedList(SinglyLinkedList& list);
     static void printQueue(Queue& queue);
+    static void printStack(Stack& stack);
 };
 
 
