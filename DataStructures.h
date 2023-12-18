@@ -81,6 +81,32 @@ public:
     int topElement();
 };
 
+struct BTNode
+{
+    int data;
+    BTNode* left;
+    BTNode* right;
+
+    BTNode():data(0), left(nullptr), right(nullptr){}
+    explicit BTNode(int data);
+    static void inOrder(BTNode* root);
+    static int maxDepth(BTNode* root);
+
+};
+
+class BST
+{
+    BTNode* root;
+    friend class Print;
+public:
+    BST():root(nullptr){}
+    explicit BST(int data);
+    void add(int data);
+    void inOrder();
+    int depth();
+    void print();
+};
+
 class Utility
 {
 public:

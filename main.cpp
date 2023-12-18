@@ -5,7 +5,11 @@
 #include "Algorithm.h"
 #include <cstdlib>
 #include <ctime>
-#define ARR_LENGTH 8
+#include <chrono>
+#include <random>
+#include <algorithm>
+
+#define ARR_LENGTH 3
 
 using namespace std;
 
@@ -13,10 +17,22 @@ int main()
 {
     srand(time(nullptr));
 
+    /*Distinct 100 numbers from 0-99 Generator*/
+    std::vector<int> numbers;
+
+    numbers.reserve(100);
+    for(int i=0; i<100; i++)       // add 0-99 to the vector
+            numbers.push_back(i);
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
+
+//    Print::printVector(numbers);
+
     /*Array*/
-    int a[ARR_LENGTH];
-    for(int& i : a)
-        i = rand()%101;
+//    int a[ARR_LENGTH];
+//    for(int& i : a)
+//        i = rand()%101;
 
 //    int temp[8][8] = {{ 1, 1, 1, 1, 1, 1, 1, 1 },
 //                      { 1, 1, 1, 1, 1, 1, 0, 0 },
@@ -40,6 +56,11 @@ int main()
 //    for(int i=0;i<ARR_LENGTH;i++)
 //        list.pushBack(rand()%101);
 
+    /*BST*/
+    BST tree;
+    for(int i=0;i<ARR_LENGTH;i++)
+        tree.add(numbers[i]);
+
 
     clock_t start = clock();
 
@@ -47,6 +68,7 @@ int main()
 //    Print::printArray(a, ARR_LENGTH);
 //    Print::printLinkedList(list);
 //    Print::printArray(screen, 8, 8);
+    tree.print();
 
 
 //    cout<<"Sorted Array: "<<endl;

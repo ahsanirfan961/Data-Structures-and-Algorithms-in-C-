@@ -204,3 +204,67 @@ int Stack::topElement() {
     return -1;
 }
 
+// Implementation of Binary Tree Node
+BTNode::BTNode(int data) {
+    this->data=data;
+    left = nullptr;
+    right = nullptr;
+}
+
+void BTNode::inOrder(BTNode *root) {
+    if(root == nullptr)
+        return;
+    inOrder(root->left);
+    cout<<root->data<<" ";
+    inOrder(root->right);
+}
+
+int BTNode::maxDepth(BTNode *root) {
+    if(root== nullptr)
+        return 0;
+    return 1+max(maxDepth(root->left), maxDepth(root->right));
+}
+
+//Implementation of Binary Search Tree
+BST::BST(int data) {
+    root = new BTNode(data);
+}
+
+void BST::add(int data) {
+    auto* q = new BTNode(data);
+    if(root == nullptr)
+        root = q;
+    else
+    {
+        BTNode* current = root;
+        BTNode* parent = current;
+        while(current!= nullptr)
+        {
+            parent = current;
+            if(data>current->data)
+                current=current->right;
+            else
+                current=current->left;
+        }
+        if(data>parent->data)
+            parent->right=q;
+        else
+            parent->left=q;
+    }
+}
+
+void BST::inOrder() {
+    BTNode::inOrder(root);
+    cout<<endl;
+}
+
+int BST::depth() {
+    return BTNode::maxDepth(root);
+}
+
+void BST::print() {
+    Print::printBT(root);
+    cout<<endl;
+}
+
+

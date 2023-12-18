@@ -6,6 +6,8 @@
 #define CLION_ALGORITHM_H
 #include <iostream>
 #include "DataStructures.h"
+#include <vector>
+#include <list>
 
 using namespace std;
 
@@ -13,6 +15,8 @@ class SinglyLinkedListNode;
 class SinglyLinkedList;
 class Queue;
 class Stack;
+class BTNode;
+class BST;
 
 class Sort
 {
@@ -46,12 +50,15 @@ public:
 
 class Print
 {
+    static int _print_t(BTNode *tree, int is_left, int offset, int depth, char s[20][255]);
 public:
     static void printArray(int array[], int length);
     static void printArray(int **array, int width, int height);
     static void printLinkedList(SinglyLinkedList& list);
     static void printQueue(Queue& queue);
     static void printStack(Stack& stack);
+    static void printVector(vector<int>& list);
+    static void printBT(BTNode* root);
 };
 
 
