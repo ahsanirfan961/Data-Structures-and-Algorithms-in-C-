@@ -64,6 +64,7 @@ struct Vector2i
     Vector2i(int x, int y):x(x), y(y){}
 };
 
+// Stack Data Structure
 class Stack
 {
     friend class Print;
