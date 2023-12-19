@@ -33,7 +33,7 @@ int Array::maxIndex(const int *array, int length) {
     return max;
 }
 
-int Array::minIndex(int *array, int length) {
+int Array::minIndex(const int *array, int length) {
     int min = 0;
     for(int i=1;i<length;i++)
         if(array[i]<array[min])
@@ -225,12 +225,32 @@ int BTNode::maxDepth(BTNode *root) {
     return 1+max(maxDepth(root->left), maxDepth(root->right));
 }
 
+void BTNode::preOrder(BTNode *root) {
+    if(root == nullptr)
+        return;
+    cout<<root->data<<" ";
+    inOrder(root->left);
+    inOrder(root->right);
+}
+
+void BTNode::postOrder(BTNode *root) {
+    if(root == nullptr)
+        return;
+    inOrder(root->left);
+    inOrder(root->right);
+    cout<<root->data<<" ";
+}
+
 //Implementation of Binary Search Tree
 BST::BST(int data) {
     root = new BTNode(data);
 }
 
-void BST::add(int data) {
+BST::BST(BTNode *ref) {
+    root=ref;
+}
+
+void BST::insert(int data) {
     auto* q = new BTNode(data);
     if(root == nullptr)
         root = q;
@@ -267,4 +287,189 @@ void BST::print() {
     cout<<endl;
 }
 
+void BST::preOrder() {
+    BTNode::preOrder(root);
+    cout<<endl;
+}
 
+void BST::postOrder() {
+    BTNode::postOrder(root);
+    cout<<endl;
+}
+
+void BST::remove(int data) {
+    BTNode* current = root;
+    BTNode* parent = nullptr;
+    while(current!= nullptr)
+    {
+        if(current->data==data)
+            break;
+        parent = current;
+        if(data>current->data)
+            current=current->right;
+        else
+            current=current->left;
+    }
+    if(current== nullptr)
+        cout<<"Node with data: "<<data<<" does exit in the BST!"<<endl;
+    else
+    {
+        if(current->left== nullptr && current->right == nullptr)
+        {
+            if(current==root)
+                delete root;
+            else
+            {
+                if(current->data > parent->data)
+                    parent->right= nullptr;
+                else
+                    parent->left= nullptr;
+                delete current;
+            }
+        } else if (current->left== nullptr || current->right == nullptr)
+        {
+            if(current->right== nullptr)
+            {
+                if(current==root)
+                {
+                    BTNode* temp = root->left;
+                    delete root;
+                    root = temp;
+                }
+                else
+                {
+                    if(current->data>parent->data)
+                        parent->right=current->left;
+                    else
+                        parent->left = current->left;
+                    delete current;
+                }
+            }
+            else
+            {
+                if(current==root)
+                {
+                    BTNode* temp = root->right;
+                    delete root;
+                    root = temp;
+                }
+                else
+                {
+                    if(current->data>parent->data)
+                        parent->right=current->right;
+                    else
+                        parent->left = current->right;
+                    delete current;
+                }
+            }
+        }
+        else
+        {
+            // when a node has both children
+            BST leftSubtree(current->left);
+            int replace = leftSubtree.max();
+            if(current==root)
+                root->data=replace;
+            else
+                current->data=replace;
+            leftSubtree.remove(replace);
+        }
+    }
+}
+
+int BST::max() {
+    BTNode* current = root;
+    while(current->right!= nullptr)
+        current=current->right;
+    return current->data;
+}
+
+int BST::min() {
+    BTNode* current = root;
+    while(current->left!= nullptr)
+        current=current->left;
+    return current->data;
+}
+
+bool BST::search(int data) {
+    BTNode* current = root;
+    while(current!= nullptr)
+    {
+        if(current->data==data)
+            return true;
+        if(data>current->data)
+            current=current->right;
+        else
+            current=current->left;
+    }
+    return false;
+}
+
+// Implementation of Heap Data Structure
+Heap::Heap(int maxSize, const string& heapProperty):maxSize(maxSize), size(0) {
+    property = heapProperty=="max";
+    array = new int[maxSize];
+    for(int i=0;i<maxSize;i++)
+        array[i]=0;
+}
+
+Heap::Heap(int maxSize):maxSize(maxSize), size(0), property(true)
+{
+    array = new int[maxSize];
+    for(int i=0;i<maxSize;i++)
+        array[i]=0;
+}
+
+Heap::~Heap() {
+    delete array;
+}
+
+void Heap::heapify(int root) {
+    int left = 2*root;
+    int right = 2*root+1;
+
+    if(property)
+    {
+        int largest = root;
+        if(array[left]>array[largest] && left<size)
+            largest=left;
+        if(array[right]>array[largest] && right<size)
+            largest=right;
+        if(largest!=root)
+        {
+            Utility::swap(array[root], array[largest]);
+            heapify(largest);
+        }
+
+    } else
+    {
+        int smallest = root;
+        if(array[left]<array[smallest] && left<size)
+            smallest=left;
+        if(array[right]<array[smallest] && right<size)
+            smallest=right;
+        if(smallest!=root)
+        {
+            Utility::swap(array[root], array[smallest]);
+            heapify(smallest);
+        }
+    }
+}
+
+Heap::Heap(int maxSize, const string &heapProperty, int *array, int length):maxSize(maxSize), size(length) {
+    property=heapProperty=="max";
+    this->array = new int[maxSize];
+    for(int i=0;i<length;i++)
+        this->array[i+1] = array[i];
+    createHeap();
+}
+
+void Heap::createHeap() {
+    int index = size;
+    while(index>0)
+        heapify(index--);
+}
+
+void Heap::print() {
+    Print::printArray(array+1, size);
+}

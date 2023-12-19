@@ -285,7 +285,7 @@ void Print::printVector(vector<int> &list) {
 
 void Print::printBT(BTNode *root)
 {
-    char s[20][255];
+    char s[BTNode::maxDepth(root)*2][255];
     for (auto & i : s)
         sprintf(i, "%80s", " ");
 
@@ -295,7 +295,7 @@ void Print::printBT(BTNode *root)
         printf("%s\n", i);
 }
 
-int Print::printTree(BTNode *tree, int is_left, int offset, int depth, char s[20][255])
+int Print::printTree(BTNode *tree, int is_left, int offset, int depth, char s[][255])
 {
     char b[20];
     int width = 5;

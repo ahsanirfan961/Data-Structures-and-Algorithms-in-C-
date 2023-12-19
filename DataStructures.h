@@ -6,6 +6,9 @@
 #define DATA_STRUCTURES___ALGORITHMS_DATASTRUCTURES_H
 #include <iostream>
 #include "Algorithm.h"
+#include <string>
+
+using namespace std;
 
 class Array
 {
@@ -14,7 +17,7 @@ public:
     static int maxElement(const int array[], int length);
     static int minElement(const int array[], int length);
     static int maxIndex(const int array[], int length);
-    static int minIndex(int array[], int length);
+    static int minIndex(const int array[], int length);
     static void sortedMerge(int array1[], int start, int middle, int end);
     static void copyArray(int *copiedTo, const int *copiedFrom, int fromIndex, int end);
 };
@@ -90,6 +93,8 @@ struct BTNode
     BTNode():data(0), left(nullptr), right(nullptr){}
     explicit BTNode(int data);
     static void inOrder(BTNode* root);
+    static void preOrder(BTNode* root);
+    static void postOrder(BTNode* root);
     static int maxDepth(BTNode* root);
 
 };
@@ -100,10 +105,34 @@ class BST
     friend class Print;
 public:
     BST():root(nullptr){}
+    explicit BST(BTNode* ref);
     explicit BST(int data);
-    void add(int data);
+    void insert(int data);
+    void remove(int data);
     void inOrder();
+    void preOrder();
+    void postOrder();
+    int max();
+    int min();
     int depth();
+    bool search(int data);
+    void print();
+};
+
+class Heap
+{
+    // Heap property: Max heap(true) or Min Heap(false)
+    bool property;
+    int *array;
+    int size;
+    int maxSize;
+public:
+    explicit Heap(int maxSize);
+    Heap(int maxSize, const string& heapProperty);
+    Heap(int maxSize, const string& heapProperty, int* array, int length);
+    ~Heap();
+    void heapify(int root);
+    void createHeap();
     void print();
 };
 

@@ -50,7 +50,7 @@ public:
 
 class Print
 {
-    static int printTree(BTNode *tree, int is_left, int offset, int depth, char s[20][255]);
+    static int printTree(BTNode *tree, int is_left, int offset, int depth, char s[][255]);
 public:
     static void printArray(int array[], int length);
     static void printArray(int **array, int width, int height);

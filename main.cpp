@@ -9,7 +9,7 @@
 #include <random>
 #include <algorithm>
 
-#define ARR_LENGTH 3
+#define ARR_LENGTH 5
 
 using namespace std;
 
@@ -30,9 +30,9 @@ int main()
 //    Print::printVector(numbers);
 
     /*Array*/
-//    int a[ARR_LENGTH];
-//    for(int& i : a)
-//        i = rand()%101;
+    int a[ARR_LENGTH];
+    for(int& i : a)
+        i = rand()%101;
 
 //    int temp[8][8] = {{ 1, 1, 1, 1, 1, 1, 1, 1 },
 //                      { 1, 1, 1, 1, 1, 1, 0, 0 },
@@ -57,10 +57,12 @@ int main()
 //        list.pushBack(rand()%101);
 
     /*BST*/
-    BST tree;
-    for(int i=0;i<ARR_LENGTH;i++)
-        tree.add(numbers[i]);
+//    BST tree;
+//    for(int i=0;i<ARR_LENGTH;i++)
+//        tree.insert(numbers[i]);
 
+    /*Heap*/
+    Heap heap(ARR_LENGTH, "max",a, ARR_LENGTH);
 
     clock_t start = clock();
 
@@ -68,8 +70,8 @@ int main()
 //    Print::printArray(a, ARR_LENGTH);
 //    Print::printLinkedList(list);
 //    Print::printArray(screen, 8, 8);
-    tree.print();
-
+//    tree.print();
+    heap.print();
 
 //    cout<<"Sorted Array: "<<endl;
 //    Sort::bitonicSort(a, ARR_LENGTH);
