@@ -464,4 +464,71 @@ void GeneticAlgorithms::sortOnWeakness(vector<Individual> &population) {
 }
 
 
+bool Chess::allVisited(int (*board)[8]) {
+    for(int i=0;i<8;i++)
+        for(int j=0;j<8;j++)
+            if(board[i][j]==-1)
+                return false;
+    return true;
+}
 
+void Chess::printBoard(int (*board)[8]) {
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+            cout<<board[i][j]<<" ";
+        cout<<endl;
+    }
+}
+
+void Chess::knightTour(int x, int y) {
+    int solution[8][8];
+    for(int i=0;i<8;i++)
+        for(int j=0;j<8;j++)
+            solution[i][j] = -1;
+    vector<Vector2i> moves;
+    moves.push_back(Vector2i(2, 1));
+    moves.push_back(Vector2i(1, 2));
+    moves.push_back(Vector2i(-1, 2));
+    moves.push_back(Vector2i(-2, 1));
+    moves.push_back(Vector2i(-2, -1));
+    moves.push_back(Vector2i(-1, -2));
+    moves.push_back(Vector2i(1, -2));
+    moves.push_back(Vector2i(2, -1));
+    solution[x][y] = 0;
+    if(solveKnightTour(solution, 0, 0, moves))
+        printBoard(solution);
+    else
+        cout<<"No solution exists!"<<endl;
+}
+
+bool Chess::solveKnightTour(int solution[8][8], int x, int y, vector<Vector2i> moves) {
+    static int move = 0;
+    if(allVisited(solution))
+        return true;
+    for(int i=0;i<moves.size();i++)
+    {
+        Vector2i next(x+moves[i].x, y+moves[i].y);
+        if(isSafe(next) && solution[next.x][next.y]==-1)
+        {
+            move++;
+            solution[next.x][next.y] = move;
+            if(solveKnightTour(solution, next.x, next.y, moves))
+                return true;
+            else
+            {
+                move--;
+                solution[next.x][next.y] = -1;
+            }
+
+        }
+
+    }
+    return false;
+}
+
+bool Chess::isSafe(Vector2i &position) {
+    if(position.x >=0 && position.y>=0 && position.x<=7 && position.y<=7)
+        return true;
+    return false;
+}

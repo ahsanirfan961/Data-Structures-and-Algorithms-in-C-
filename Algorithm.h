@@ -19,6 +19,7 @@ class Stack;
 class BTNode;
 class BST;
 struct Individual;
+struct Vector2i;
 
 class Sort
 {
@@ -59,6 +60,16 @@ public:
     static char mutatedGene();
     static Individual random_gnome(int size);
     static void sortOnWeakness(vector<Individual> &population);
+};
+
+class Chess
+{
+    static bool allVisited(int board[8][8]);
+    static bool solveKnightTour(int solution[8][8], int x, int y, vector<Vector2i> moves);
+    static bool isSafe(Vector2i& position);
+public:
+    static void printBoard(int board[8][8]);
+    static void knightTour(int x, int y);
 };
 
 class Print
