@@ -4,10 +4,12 @@
 #include "Algorithm.h"
 #include <cmath>
 #include <queue>
+#include <cstdlib>
+#include <ctime>
+#include <utility>
 
 /* Implementation of whole sort class*/
-
-__attribute__((unused)) void Sort::bubbleSort(int *array, int length) {
+void Sort::bubbleSort(int *array, int length) {
     for(int i=0;i<length;i++)
         for(int j=0;j<length-i-1;j++)
         {
@@ -389,3 +391,77 @@ bool ScreenColoring::isValid(int **screen, int width, int height, int pixelX, in
         return false;
     return true;
 }
+
+// Implementation of Genetic Algorithms
+const string GeneticAlgorithms::GENES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890, .-;:_!\"#%&/()=?@${[]}";
+string GeneticAlgorithms::naturalSelection(const string& target, int population_size) {
+    srand(time(nullptr));
+    int generation = 0;
+    vector<Individual> population;
+    for(int i=0;i<population_size;i++)
+        population.push_back(random_gnome(target.size()));
+
+    bool found = false;
+    while(!found)
+    {
+        for(auto & i : population)
+            i.calculateWeakness(target);
+        sortOnWeakness(population);
+        if(population[0].weakness <= 0)
+        {
+            found= true;
+            break;
+        }
+        vector<Individual> nextGeneration;
+        int fittest = (10*population_size)/100;
+        for(int i=0;i<fittest;i++)
+            nextGeneration.push_back(population[i]);
+
+        int childs = (90*population_size)/100;
+        for(int i=0;i<childs;i++)
+        {
+            int father = rand()%50;
+            int mother = rand()%50;
+            Individual child = Individual::mate(population[father], population[mother]);
+            child.calculateWeakness(target);
+            nextGeneration.push_back(child);
+        }
+        population = nextGeneration;
+        cout<< "Generation: " << generation << "\t";
+        cout<< "String: "<< population[0].chromosome <<"\t";
+        cout<< "Weakness: "<< population[0].weakness << "\n";
+        generation++;
+    }
+    cout<< "Generation: " << generation << "\t";
+    cout<< "String: "<< population[0].chromosome <<"\t";
+    cout<< "Weakness: "<< population[0].weakness << "\n";
+    return population[0].chromosome;
+}
+
+Individual GeneticAlgorithms::random_gnome(int size) {
+    Individual person;
+    for(int i=0;i<size;i++)
+        person.chromosome += mutatedGene();
+    return person;
+}
+
+char GeneticAlgorithms::mutatedGene() {
+    char gene = GENES[rand()%GENES.size()];
+    return gene;
+}
+
+void GeneticAlgorithms::sortOnWeakness(vector<Individual> &population) {
+    for(int i=0;i<population.size();i++)
+        for(int j=0;j<population.size()-i-1;j++)
+        {
+            if(population[j].weakness>population[j+1].weakness)
+            {
+                Individual temp = population[j];
+                population[j] = population[j+1];
+                population[j+1] = temp;
+            }
+        }
+}
+
+
+

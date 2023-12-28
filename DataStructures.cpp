@@ -473,3 +473,35 @@ void Heap::createHeap() {
 void Heap::print() {
     Print::printArray(array+1, size);
 }
+
+// Implementation of Individual class
+Individual::Individual(string chromosome):chromosome(std::move(chromosome)) {
+    weakness = 100;
+}
+
+int Individual::calculateWeakness(const string& target) {
+    weakness=0;
+    for(int i=0;i<target.length();i++)
+        weakness += chromosome[i]!=target[i] ? 1 : 0;
+    return weakness;
+}
+
+Individual Individual::mate(Individual i1, Individual i2) {
+    Individual child;
+    for(int i=0;i<i1.chromosome.size();i++)
+    {
+        int probability = rand()%100;
+        if(probability<45)
+            child.chromosome += i1.chromosome[i];
+        else if(probability<90)
+            child.chromosome += i2.chromosome[i];
+        else
+            child.chromosome += GeneticAlgorithms::mutatedGene();
+    }
+    return child;
+}
+
+void Individual::operator=(const Individual &other) {
+    chromosome = other.chromosome;
+    weakness = other.weakness;
+}

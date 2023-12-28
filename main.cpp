@@ -11,6 +11,7 @@
 
 #define ARR_LENGTH 5
 
+
 using namespace std;
 
 int main()
@@ -18,21 +19,21 @@ int main()
     srand(time(nullptr));
 
     /*Distinct 100 numbers from 0-99 Generator*/
-    std::vector<int> numbers;
-
-    numbers.reserve(100);
-    for(int i=0; i<100; i++)       // add 0-99 to the vector
-            numbers.push_back(i);
-
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
+//    std::vector<int> numbers;
+//
+//    numbers.reserve(100);
+//    for(int i=0; i<100; i++)       // add 0-99 to the vector
+//            numbers.push_back(i);
+//
+//    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+//    std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
 
 //    Print::printVector(numbers);
 
     /*Array*/
-    int a[ARR_LENGTH];
-    for(int& i : a)
-        i = rand()%101;
+//    int a[ARR_LENGTH];
+//    for(int& i : a)
+//        i = rand()%101;
 
 //    int temp[8][8] = {{ 1, 1, 1, 1, 1, 1, 1, 1 },
 //                      { 1, 1, 1, 1, 1, 1, 0, 0 },
@@ -62,8 +63,8 @@ int main()
 //        tree.insert(numbers[i]);
 
     /*Heap*/
-    Heap heap(ARR_LENGTH, "max",a, ARR_LENGTH);
-
+//    Heap heap(ARR_LENGTH, "max",a, ARR_LENGTH);
+//
     clock_t start = clock();
 
     cout<<"Original Array:"<<endl;
@@ -71,7 +72,8 @@ int main()
 //    Print::printLinkedList(list);
 //    Print::printArray(screen, 8, 8);
 //    tree.print();
-    heap.print();
+//    heap.print();
+    GeneticAlgorithms::naturalSelection("Today, we went to saddar!");
 
 //    cout<<"Sorted Array: "<<endl;
 //    Sort::bitonicSort(a, ARR_LENGTH);

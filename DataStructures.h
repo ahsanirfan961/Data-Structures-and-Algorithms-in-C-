@@ -136,6 +136,19 @@ public:
     void print();
 };
 
+// Supporting data type for Genetic Algorithms
+class Individual
+{
+public:
+    string chromosome;
+    int weakness;
+    Individual():weakness(100){}
+    explicit Individual(string chromosome);
+    int calculateWeakness(const string& target);
+    static Individual mate(Individual i1, Individual i2);
+    void operator=(const Individual& other);
+};
+
 class Utility
 {
 public:

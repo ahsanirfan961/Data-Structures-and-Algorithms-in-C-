@@ -7,6 +7,7 @@
 #include <iostream>
 #include "DataStructures.h"
 #include <vector>
+#include <algorithm>
 #include <list>
 
 using namespace std;
@@ -17,6 +18,7 @@ class Queue;
 class Stack;
 class BTNode;
 class BST;
+struct Individual;
 
 class Sort
 {
@@ -46,6 +48,17 @@ class ScreenColoring
     static bool isValid(int **screen, int width, int height, int pixelX, int pixelY, int prevColor, int newColor);
 public:
     static void floodFill(int **screen, int width, int height, int pixelX, int pixelY, int newColor);
+};
+
+class GeneticAlgorithms
+{
+    static const int POPULATION_SIZE = 100;
+    static const string GENES;
+public:
+    static string naturalSelection(const string& target, int population_size = POPULATION_SIZE);
+    static char mutatedGene();
+    static Individual random_gnome(int size);
+    static void sortOnWeakness(vector<Individual> &population);
 };
 
 class Print
