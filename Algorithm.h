@@ -12,6 +12,7 @@
 
 using namespace std;
 
+// Re-declaration of data structures to resolve circular dependencies
 class SinglyLinkedListNode;
 class SinglyLinkedList;
 class Queue;
@@ -20,6 +21,9 @@ class BTNode;
 class BST;
 struct Individual;
 struct Vector2i;
+class Graph;
+class DirectedGraph;
+class UndirectedGraph;
 
 class Sort
 {
@@ -83,6 +87,7 @@ public:
     static void printStack(Stack& stack);
     static void printVector(vector<int>& list);
     static void printBT(BTNode* root);
+    static void printGraph(Graph& graph);
 };
 
 

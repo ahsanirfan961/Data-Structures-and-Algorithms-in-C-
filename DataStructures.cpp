@@ -539,7 +539,7 @@ Graph::Graph(int size):maxVertices(size), numVertices(0) {
     {
         vertices[i] = 0;
         for(int j=0;j<maxVertices;j++)
-            edges[i][j] = 0;
+            edges[i][j] = NULL_EDGE;
     }
 }
 
@@ -564,7 +564,7 @@ bool Graph::isComplete() {
         {
             if(i==j)
                 continue;
-            if(edges[i][j]==0)
+            if(edges[i][j]==NULL_EDGE)
                 return false;
         }
     return true;
@@ -585,8 +585,8 @@ void Graph::removeVertex(int data) {
         Array::shiftArray(vertices, maxVertices, position+1, 1, 0, numVertices-1);
         for(int i=0;i<numVertices;i++)
         {
-            edges[position][i] = 0;
-            edges[i][position] = 0;
+            edges[position][i] = NULL_EDGE;
+            edges[i][position] = NULL_EDGE;
         }
         numVertices--;
     }
@@ -613,4 +613,49 @@ int Graph::weightIs(int vertex1, int vertex2) {
         return -1;
     }
     return edges[pos1][pos2];
+}
+
+bool Graph::isAdjacent(int vertex1, int vertex2) {
+    return weightIs(vertex1, vertex2)>0;
+}
+
+int Graph::getVertices() const {
+    return numVertices;
+}
+
+
+// Implementation of Undirected Graph inherited from Graph
+void UndirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
+    int pos1 = hasIndex(vertex1);
+    int pos2 = hasIndex(vertex2);
+    if(pos1<0 || pos2<0)
+    {
+        if (pos1 < 0)
+            cout << "No such vertex with value: " << vertex1 << " found!" << endl;
+        if (pos2 < 0)
+            cout << "No such vertex with value: " << vertex2 << " found!" << endl;
+    }
+    else
+    {
+        edges[pos1][pos2] = weight;
+        edges[pos2][pos1] = weight;
+    }
+}
+
+
+// Implementation of Directed Graph inherited from Graph
+void DirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
+    int pos1 = hasIndex(vertex1);
+    int pos2 = hasIndex(vertex2);
+    if(pos1<0 || pos2<0)
+    {
+        if (pos1 < 0)
+            cout << "No such vertex with value: " << vertex1 << " found!" << endl;
+        if (pos2 < 0)
+            cout << "No such vertex with value: " << vertex2 << " found!" << endl;
+    }
+    else
+    {
+        edges[pos1][pos2] = weight;
+    }
 }

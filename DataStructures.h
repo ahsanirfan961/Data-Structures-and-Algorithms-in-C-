@@ -152,12 +152,14 @@ public:
 
 class Graph
 {
+    friend class Print;
+protected:
     int *vertices;
-    int **edges{};
+    int **edges;
     int maxVertices;
     int numVertices;
-    int hasIndex(int vertex);
 public:
+    static const short NULL_EDGE = 0;
     explicit Graph(int size);
     ~Graph();
     bool isEmpty() const;
@@ -167,7 +169,26 @@ public:
     void removeVertex(int data);
     virtual void addEdge(int vertex1, int vertex2, int weight)=0;
     int weightIs(int vertex1, int vertex2);
+    int hasIndex(int vertex);
+    bool isAdjacent(int vertex1, int vertex2);
+    int getVertices() const;
 };
+
+class UndirectedGraph : public Graph
+{
+public:
+    explicit UndirectedGraph(int size): Graph(size){}
+    void addEdge(int vertex1, int vertex2, int weight) override;
+};
+
+class DirectedGraph : public Graph
+{
+public:
+    explicit DirectedGraph(int size): Graph(size){}
+    void addEdge(int vertex1, int vertex2, int weight) override;
+};
+
+
 
 class Utility
 {

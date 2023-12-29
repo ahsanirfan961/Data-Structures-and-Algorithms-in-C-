@@ -352,6 +352,21 @@ int Print::printTree(BTNode *tree, int is_left, int offset, int depth, char s[][
     return left + width + right;
 }
 
+void Print::printGraph(Graph &graph) {
+    cout<<"Vertices: ";
+    for(int i=0;i<graph.numVertices;i++)
+        cout<<graph.vertices[i]<<", ";
+    cout<<endl<<"Edges: "<<endl;
+    for(int i=0;i< graph.numVertices;i++)
+    {
+        for(int j=0;j<graph.numVertices;j++)
+        {
+            if(graph.edges[i][j]!=0)
+                cout<<graph.vertices[i]<<" -> "<<graph.vertices[j]<<" : "<<graph.edges[i][j]<<endl;
+        }
+    }
+}
+
 
 
 // Implementation of Screen Coloring Class
