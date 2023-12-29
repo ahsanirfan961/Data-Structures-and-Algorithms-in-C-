@@ -20,6 +20,7 @@ public:
     static int minIndex(const int array[], int length);
     static void sortedMerge(int array1[], int start, int middle, int end);
     static void copyArray(int *copiedTo, const int *copiedFrom, int fromIndex, int end);
+    static void shiftArray(int *array, int length, int start, int count, bool direction, int end=0);
 };
 
 class SinglyLinkedListNode
@@ -147,6 +148,25 @@ public:
     int calculateWeakness(const string& target);
     static Individual mate(Individual i1, Individual i2);
     void operator=(const Individual& other);
+};
+
+class Graph
+{
+    int *vertices;
+    int **edges{};
+    int maxVertices;
+    int numVertices;
+    int hasIndex(int vertex);
+public:
+    explicit Graph(int size);
+    ~Graph();
+    bool isEmpty() const;
+    bool isFull() const;
+    bool isComplete();
+    void addVertex(int data);
+    void removeVertex(int data);
+    virtual void addEdge(int vertex1, int vertex2, int weight)=0;
+    int weightIs(int vertex1, int vertex2);
 };
 
 class Utility

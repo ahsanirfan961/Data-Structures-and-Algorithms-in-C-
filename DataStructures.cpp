@@ -74,6 +74,28 @@ int Array::minElement(const int *array, int length) {
     return min;
 }
 
+void Array::shiftArray(int *array, int length, int start, int count, bool direction, int end) {
+    if(end == 0)
+        end = length-1;
+    if(end<start)
+        return;
+    // direction=0 means shift left and direction=1 means shift right
+    if(!direction)
+    {
+        if(start-count<0)
+            return;
+        for(int i=0;i<end-start+1;i++)
+            Utility::swap(array[start+i], array[start-count+i]);
+    }
+    else
+    {
+        if(end+count>=length)
+            return;
+        for(int i=0;i<end-start+1;i++)
+            Utility::swap(array[end-i], array[end+count-i]);
+    }
+}
+
 // Implementation of Linked List Class
 
 void SinglyLinkedList::pushBack(int data) {
@@ -504,4 +526,91 @@ Individual Individual::mate(Individual i1, Individual i2) {
 void Individual::operator=(const Individual &other) {
     chromosome = other.chromosome;
     weakness = other.weakness;
+}
+
+// Implementation of Abstract class Graph
+Graph::Graph(int size):maxVertices(size), numVertices(0) {
+    vertices = new int[maxVertices];
+    edges = new int*[maxVertices];
+    for(int i=0;i<maxVertices;i++)
+        edges[i] = new int[maxVertices];
+
+    for(int i=0;i<maxVertices;i++)
+    {
+        vertices[i] = 0;
+        for(int j=0;j<maxVertices;j++)
+            edges[i][j] = 0;
+    }
+}
+
+Graph::~Graph() {
+    delete[] vertices;
+    for(int i=0;i<maxVertices;i++)
+        delete[] edges[i];
+    delete[] edges;
+}
+
+bool Graph::isEmpty() const {
+    return numVertices==0;
+}
+
+bool Graph::isFull() const {
+    return numVertices==maxVertices;
+}
+
+bool Graph::isComplete() {
+    for(int i=0;i<numVertices;i++)
+        for(int j=0;j<numVertices;j++)
+        {
+            if(i==j)
+                continue;
+            if(edges[i][j]==0)
+                return false;
+        }
+    return true;
+}
+
+void Graph::addVertex(int data) {
+    if(!isFull())
+        vertices[numVertices++] = data;
+    else
+        cout<<"Graph is full!"<<endl;
+}
+
+void Graph::removeVertex(int data) {
+    int position = hasIndex(data);
+    if(position>=0)
+    {
+        vertices[position] = 0;
+        Array::shiftArray(vertices, maxVertices, position+1, 1, 0, numVertices-1);
+        for(int i=0;i<numVertices;i++)
+        {
+            edges[position][i] = 0;
+            edges[i][position] = 0;
+        }
+        numVertices--;
+    }
+    else
+        cout<<"No vertex with value: "<<data<<" found!"<<endl;
+}
+
+int Graph::hasIndex(int vertex) {
+    for(int i=0;i<numVertices;i++)
+        if(vertices[i]==vertex)
+            return i;
+    return -1;
+}
+
+int Graph::weightIs(int vertex1, int vertex2) {
+    int pos1 = hasIndex(vertex1);
+    int pos2 = hasIndex(vertex2);
+    if(pos1<0 || pos2<0)
+    {
+        if (pos1 < 0)
+            cout << "No such vertex with value: " << vertex1 << " found!" << endl;
+        if (pos2 < 0)
+            cout << "No such vertex with value: " << vertex2 << " found!" << endl;
+        return -1;
+    }
+    return edges[pos1][pos2];
 }

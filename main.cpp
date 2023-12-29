@@ -43,7 +43,7 @@ int main()
 //                      { 1, 1, 1, 2, 2, 2, 2, 0 },
 //                      { 1, 1, 1, 1, 1, 2, 1, 1 },
 //                      { 1, 1, 1, 1, 1, 2, 2, 1 } };
-    int board[8][8] = {0};
+
 //
 //    int** screen = new int*[8];
 //    for (int i = 0; i < 8; i++) {
@@ -66,13 +66,15 @@ int main()
     /*Heap*/
 //    Heap heap(ARR_LENGTH, "max",a, ARR_LENGTH);
 //
+
+
+
     clock_t start = clock();
 
     cout<<"Original Array:"<<endl;
-//    Print::printArray(a, ARR_LENGTH);
-//    Print::printLinkedList(list);
-//    Print::printArray(screen, 8, 8);
-    Chess::knightTour(0, 0);
+//    Print::printArray(array, 6);
+
+
 
 //    cout<<"Sorted Array: "<<endl;
 //    Sort::bitonicSort(a, ARR_LENGTH);
