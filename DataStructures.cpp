@@ -4,7 +4,11 @@
 
 #include "DataStructures.h"
 
-// Implementation of Array Class
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Array class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
 
 void Array::flipArray(int *array, int length, int i)
 {
@@ -96,7 +100,11 @@ void Array::shiftArray(int *array, int length, int start, int count, bool direct
     }
 }
 
-// Implementation of Linked List Class
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Linked List class                           *
+ *                                                                                         *
+ *******************************************************************************************/
 
 void SinglyLinkedList::pushBack(int data) {
     auto* q = new SinglyLinkedListNode(data);
@@ -122,7 +130,12 @@ int SinglyLinkedList::length() const {
     return c;
 }
 
-// Implementation of queue class
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Queue class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
+
 Queue::Queue(int size): capacity(size), front(size), rear(size)
 {
     array = new int[capacity+1];
@@ -175,7 +188,11 @@ int Queue::getSize() {
 }
 
 
-// Implementation of Utilities Class
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Utility class                               *
+ *                                                                                         *
+ *******************************************************************************************/
 
 void Utility::swap(int& a, int& b)
 {
@@ -184,7 +201,12 @@ void Utility::swap(int& a, int& b)
     b = temp;
 }
 
-// Implementation of Stack data structure
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Stack class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
+
 Stack::Stack(int size):top(-1), size(size), elements(0) {
     array = new int[size];
     for(int i=0;i<size;i++)
@@ -226,7 +248,12 @@ int Stack::topElement() {
     return -1;
 }
 
-// Implementation of Binary Tree Node
+/*******************************************************************************************
+ *                                                                                         *
+ *                     Implementation of Binary Tree Node class                            *
+ *                                                                                         *
+ *******************************************************************************************/
+
 BTNode::BTNode(int data) {
     this->data=data;
     left = nullptr;
@@ -263,7 +290,12 @@ void BTNode::postOrder(BTNode *root) {
     cout<<root->data<<" ";
 }
 
-//Implementation of Binary Search Tree
+/*******************************************************************************************
+ *                                                                                         *
+ *                     Implementation of Binary Search Tree class                          *
+ *                                                                                         *
+ *******************************************************************************************/
+
 BST::BST(int data) {
     root = new BTNode(data);
 }
@@ -427,7 +459,12 @@ bool BST::search(int data) {
     return false;
 }
 
-// Implementation of Heap Data Structure
+/*******************************************************************************************
+ *                                                                                         *
+ *                            Implementation of Heap class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
+
 Heap::Heap(int maxSize, const string& heapProperty):maxSize(maxSize), size(0) {
     property = heapProperty=="max";
     array = new int[maxSize];
@@ -496,7 +533,12 @@ void Heap::print() {
     Print::printArray(array+1, size);
 }
 
-// Implementation of Individual class
+/*******************************************************************************************
+ *                                                                                         *
+ *                        Implementation of Individual class                               *
+ *                                                                                         *
+ *******************************************************************************************/
+
 Individual::Individual(string chromosome):chromosome(std::move(chromosome)) {
     weakness = 100;
 }
@@ -528,7 +570,12 @@ void Individual::operator=(const Individual &other) {
     weakness = other.weakness;
 }
 
-// Implementation of Abstract class Graph
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Graph class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
+
 Graph::Graph(int size):maxVertices(size), numVertices(0) {
     vertices = new int[maxVertices];
     edges = new int*[maxVertices];
@@ -590,14 +637,13 @@ void Graph::removeVertex(int data) {
         }
         numVertices--;
     }
-    else
-        cout<<"No vertex with value: "<<data<<" found!"<<endl;
 }
 
 int Graph::hasIndex(int vertex) {
     for(int i=0;i<numVertices;i++)
         if(vertices[i]==vertex)
             return i;
+    cout<<"No vertex with value: "<<vertex<<" found!"<<endl;
     return -1;
 }
 
@@ -605,13 +651,7 @@ int Graph::weightIs(int vertex1, int vertex2) {
     int pos1 = hasIndex(vertex1);
     int pos2 = hasIndex(vertex2);
     if(pos1<0 || pos2<0)
-    {
-        if (pos1 < 0)
-            cout << "No such vertex with value: " << vertex1 << " found!" << endl;
-        if (pos2 < 0)
-            cout << "No such vertex with value: " << vertex2 << " found!" << endl;
         return -1;
-    }
     return edges[pos1][pos2];
 }
 
@@ -623,8 +663,28 @@ int Graph::getVertices() const {
     return numVertices;
 }
 
+vector<int> Graph::getAdjacentVertices(int vertex) {
+    int index = hasIndex(vertex);
+    vector<int> v;
+    for(int i=0;i<numVertices;i++)
+    {
+        if(edges[index][i]>0)
+            v.push_back(vertices[i]);
+    }
+    return v;
+}
 
-// Implementation of Undirected Graph inherited from Graph
+int Graph::getVertex(int index) {
+    return vertices[index];
+}
+
+
+/*******************************************************************************************
+ *                                                                                         *
+ *                         Implementation of Undirected class                              *
+ *                                                                                         *
+ *******************************************************************************************/
+
 void UndirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
     int pos1 = hasIndex(vertex1);
     int pos2 = hasIndex(vertex2);
@@ -643,7 +703,12 @@ void UndirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
 }
 
 
-// Implementation of Directed Graph inherited from Graph
+/*******************************************************************************************
+ *                                                                                         *
+ *                     Implementation of Directed Graph class                              *
+ *                                                                                         *
+ *******************************************************************************************/
+
 void DirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
     int pos1 = hasIndex(vertex1);
     int pos2 = hasIndex(vertex2);

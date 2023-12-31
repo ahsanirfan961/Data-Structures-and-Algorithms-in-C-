@@ -24,6 +24,7 @@ struct Vector2i;
 class Graph;
 class DirectedGraph;
 class UndirectedGraph;
+struct DijkstraPath;
 
 class Sort
 {
@@ -76,6 +77,22 @@ public:
     static void knightTour(int x, int y);
 };
 
+class Search
+{
+public:
+    static bool breadthFirstSearch(Graph& graph, int startVertex, int endVertex);
+    static bool depthFirstSearch(Graph& graph, int startVertex, int endVertex);
+};
+
+class ShortestPath
+{
+public:
+    static DijkstraPath DijkstrasAlgorithm(Graph& graph, int vertex);
+    static vector<int> shortestPath(Graph& graph, int fromVertex, int toVertex);
+    static int shortestDistance(Graph& graph, int fromVertex, int toVertex);
+    static void shortestPaths(Graph& graph, int vertex);
+};
+
 class Print
 {
     static int printTree(BTNode *tree, int is_left, int offset, int depth, char s[][255]);
@@ -89,6 +106,5 @@ public:
     static void printBT(BTNode* root);
     static void printGraph(Graph& graph);
 };
-
 
 #endif //CLION_ALGORITHM_H

@@ -8,7 +8,12 @@
 #include <ctime>
 #include <utility>
 
-/* Implementation of whole sort class*/
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Sort class                                  *
+ *                                                                                         *
+ *******************************************************************************************/
+
 void Sort::bubbleSort(int *array, int length) {
     for(int i=0;i<length;i++)
         for(int j=0;j<length-i-1;j++)
@@ -237,7 +242,11 @@ void Sort::bitonicMerge(int *array, int start, int length, int dir) {
     }
 }
 
-/* Implementation of Print Class*/
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Print class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
 
 void Print::printArray(int *array, int length) {
     for(int i=0;i<length;i++)
@@ -368,8 +377,11 @@ void Print::printGraph(Graph &graph) {
 }
 
 
-
-// Implementation of Screen Coloring Class
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Screen Coloring class                       *
+ *                                                                                         *
+ *******************************************************************************************/
 
 void ScreenColoring::floodFill(int **screen, int width, int height, int pixelX, int pixelY, int newColor) {
     queue<Vector2i> toFill;
@@ -407,7 +419,12 @@ bool ScreenColoring::isValid(int **screen, int width, int height, int pixelX, in
     return true;
 }
 
-// Implementation of Genetic Algorithms
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Genetic Algorithms class                    *
+ *                                                                                         *
+ *******************************************************************************************/
+
 const string GeneticAlgorithms::GENES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890, .-;:_!\"#%&/()=?@${[]}";
 string GeneticAlgorithms::naturalSelection(const string& target, int population_size) {
     srand(time(nullptr));
@@ -478,6 +495,11 @@ void GeneticAlgorithms::sortOnWeakness(vector<Individual> &population) {
         }
 }
 
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Chess class                                 *
+ *                                                                                         *
+ *******************************************************************************************/
 
 bool Chess::allVisited(int (*board)[8]) {
     for(int i=0;i<8;i++)
@@ -498,9 +520,9 @@ void Chess::printBoard(int (*board)[8]) {
 
 void Chess::knightTour(int x, int y) {
     int solution[8][8];
-    for(int i=0;i<8;i++)
-        for(int j=0;j<8;j++)
-            solution[i][j] = -1;
+    for(auto & i : solution)
+        for(int & j : i)
+            j = -1;
     vector<Vector2i> moves;
     moves.push_back(Vector2i(2, 1));
     moves.push_back(Vector2i(1, 2));
@@ -546,4 +568,180 @@ bool Chess::isSafe(Vector2i &position) {
     if(position.x >=0 && position.y>=0 && position.x<=7 && position.y<=7)
         return true;
     return false;
+}
+
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Search class                                *
+ *                                                                                         *
+ *******************************************************************************************/
+
+bool Search::breadthFirstSearch(Graph &graph, int startVertex, int endVertex) {
+    int start = graph.hasIndex(startVertex);
+    int end = graph.hasIndex(endVertex);
+
+    if(start<0 || end<0)
+        return false;
+
+    Queue queue(graph.getVertices());
+    queue.enqueue(start);
+
+    bool marked[graph.getVertices()];
+    for(auto& i:marked)
+        i = false;
+    marked[start] = true;
+
+    do {
+        int current = queue.dequeue();
+        if(current == end)
+        {
+            if(current==start)
+            {
+                if(graph.weightIs(graph.getVertex(current), graph.getVertex(end))==0)
+                    return false;
+            }
+            return true;
+        }
+        else
+        {
+            vector<int> adjacentNodes = graph.getAdjacentVertices(graph.getVertex(current));
+            for(int adjacentNode : adjacentNodes)
+            {
+                int index = graph.hasIndex(adjacentNode);
+                if(!marked[index]) {
+                    marked[index] = true;
+                    queue.enqueue(index);
+                }
+            }
+        }
+    }while(!queue.isEmpty());
+    return false;
+}
+
+bool Search::depthFirstSearch(Graph &graph, int startVertex, int endVertex) {
+    int start = graph.hasIndex(startVertex);
+    int end = graph.hasIndex(endVertex);
+
+    if(start<0 || end<0)
+        return false;
+
+    Stack stack(graph.getVertices());
+    stack.push(start);
+
+    bool marked[graph.getVertices()];
+    for(auto& i:marked)
+        i = false;
+    marked[start] = true;
+
+    do {
+        int current = stack.pop();
+        if(current == end)
+        {
+            if(current==start)
+            {
+                if(graph.weightIs(graph.getVertex(current), graph.getVertex(end))==0)
+                    return false;
+            }
+            return true;
+        }
+        else
+        {
+            vector<int> adjacentNodes = graph.getAdjacentVertices(graph.getVertex(current));
+            for(int adjacentNode : adjacentNodes)
+            {
+                int index = graph.hasIndex(adjacentNode);
+                if(!marked[index]) {
+                    marked[index] = true;
+                    stack.push(index);
+                }
+            }
+        }
+    }while(!stack.isEmpty());
+    return false;
+}
+
+/*******************************************************************************************
+ *                                                                                         *
+ *                           Implementation of Shortest Path class                         *
+ *                                                                                         *
+ *******************************************************************************************/
+
+DijkstraPath ShortestPath::DijkstrasAlgorithm(Graph &graph, int vertex) {
+    DijkstraPath dPath;
+    int start = graph.hasIndex(vertex);
+    int numVertices = graph.getVertices();
+    bool marked[numVertices];
+    for(int i=0;i<numVertices;i++)
+        marked[i] = false;
+    for(int i=0;i<numVertices;i++)
+    {
+        dPath.prevVertex.push_back(start);
+        dPath.distance.push_back(Graph::INF_EDGE);
+    }
+    dPath.distance[start] = 0;
+    for(int i=0;i<numVertices-1;i++)
+    {
+        int minDistance = Graph::INF_EDGE;
+        int currentIndex = 0;
+        for(int j=0;j<numVertices;j++)
+            if(dPath.distance[j]<minDistance && !marked[j])
+            {
+                minDistance = dPath.distance[j];
+                currentIndex = j;
+            }
+        marked[currentIndex] = true;
+        int currentVertex = graph.getVertex(currentIndex);
+        vector<int> adjacentVertices = graph.getAdjacentVertices(currentVertex);
+
+        for(int adjacentVertice : adjacentVertices)
+        {
+            int index = graph.hasIndex(adjacentVertice);
+            int distance = graph.weightIs(currentVertex, adjacentVertice);
+            if(!marked[index] && (dPath.distance[currentIndex]+distance)<dPath.distance[index]) {
+                dPath.distance[index] = dPath.distance[currentIndex] + distance;
+                dPath.prevVertex[index] = currentIndex;
+            }
+        }
+    }
+    return dPath;
+}
+
+void ShortestPath::shortestPaths(Graph &graph, int vertex) {
+    DijkstraPath dPath = DijkstrasAlgorithm(graph, vertex);
+    for(int i=0;i<graph.getVertices();i++)
+    {
+        string path;
+        int currentIndex = i;
+        int current = graph.getVertex(i);
+        while (true)
+        {
+            path+= to_string(current);
+            if(current == vertex)
+                break;
+            path += " >- ";
+            current = graph.getVertex(dPath.prevVertex[graph.hasIndex(current)]);
+        }
+        std::reverse(path.begin(), path.end());
+        cout<<"Shortest path from vertex "<<vertex<<" to vertex "<<graph.getVertex(i)<<": "<<path<<"\t\tDistance: "<<dPath.distance[i]<<endl;
+    }
+}
+
+int ShortestPath::shortestDistance(Graph &graph, int fromVertex, int toVertex) {
+    DijkstraPath dPath = DijkstrasAlgorithm(graph, fromVertex);
+    return dPath.distance[graph.hasIndex(toVertex)];
+}
+
+vector<int> ShortestPath::shortestPath(Graph &graph, int fromVertex, int toVertex) {
+    DijkstraPath dPath = DijkstrasAlgorithm(graph, fromVertex);
+    vector<int> path;
+    int current = toVertex;
+    while (true)
+    {
+        path.push_back(current);
+        if(current == fromVertex)
+            break;
+        current = graph.getVertex(dPath.prevVertex[graph.hasIndex(current)]);
+    }
+    std::reverse(path.begin(), path.end());
+    return path;
 }

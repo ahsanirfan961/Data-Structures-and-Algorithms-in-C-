@@ -5,6 +5,7 @@
 #ifndef DATA_STRUCTURES___ALGORITHMS_DATASTRUCTURES_H
 #define DATA_STRUCTURES___ALGORITHMS_DATASTRUCTURES_H
 #include <iostream>
+#include <vector>
 #include "Algorithm.h"
 #include <string>
 
@@ -160,6 +161,7 @@ protected:
     int numVertices;
 public:
     static const short NULL_EDGE = 0;
+    static const short INF_EDGE = 9999;
     explicit Graph(int size);
     ~Graph();
     bool isEmpty() const;
@@ -172,23 +174,31 @@ public:
     int hasIndex(int vertex);
     bool isAdjacent(int vertex1, int vertex2);
     int getVertices() const;
+    vector<int> getAdjacentVertices(int vertex);
+    int getVertex(int index);
 };
 
 class UndirectedGraph : public Graph
 {
 public:
     explicit UndirectedGraph(int size): Graph(size){}
-    void addEdge(int vertex1, int vertex2, int weight) override;
+    void addEdge(int vertex1, int vertex2, int weight=1) override;
 };
 
 class DirectedGraph : public Graph
 {
 public:
     explicit DirectedGraph(int size): Graph(size){}
-    void addEdge(int vertex1, int vertex2, int weight) override;
+    void addEdge(int vertex1, int vertex2, int weight=1) override;
 };
 
-
+struct DijkstraPath
+{
+    // the indexes of these arrays represent the indexes of vertices of the graph
+    // and the values in prevVertex represent the index of their previous vertices
+    vector<int> prevVertex;
+    vector<int> distance;
+};
 
 class Utility
 {
