@@ -154,6 +154,8 @@ public:
 class Graph
 {
     friend class Print;
+    friend class ShortestPath;
+    friend class SpanningTree;
 protected:
     int *vertices;
     int **edges;
@@ -163,7 +165,7 @@ public:
     static const short NULL_EDGE = 0;
     static const short INF_EDGE = 9999;
     explicit Graph(int size);
-    ~Graph();
+    virtual ~Graph();
     bool isEmpty() const;
     bool isFull() const;
     bool isComplete();
@@ -176,12 +178,14 @@ public:
     int getVertices() const;
     vector<int> getAdjacentVertices(int vertex);
     int getVertex(int index);
+    bool isConnected();
 };
 
 class UndirectedGraph : public Graph
 {
 public:
     explicit UndirectedGraph(int size): Graph(size){}
+    ~UndirectedGraph() override= default;
     void addEdge(int vertex1, int vertex2, int weight=1) override;
 };
 
@@ -189,15 +193,25 @@ class DirectedGraph : public Graph
 {
 public:
     explicit DirectedGraph(int size): Graph(size){}
+    ~DirectedGraph() override= default;
     void addEdge(int vertex1, int vertex2, int weight=1) override;
 };
 
-struct DijkstraPath
+struct MinDistance
 {
     // the indexes of these arrays represent the indexes of vertices of the graph
     // and the values in prevVertex represent the index of their previous vertices
     vector<int> prevVertex;
     vector<int> distance;
+};
+
+class SpanningTree : protected UndirectedGraph
+{
+    friend class Print;
+    void makeSpanningTree(Graph& graph, vector<bool> &visited, int start);
+public:
+    explicit SpanningTree(Graph& graph);
+    ~SpanningTree() override = default;
 };
 
 class Utility

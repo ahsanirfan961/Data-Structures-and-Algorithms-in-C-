@@ -24,7 +24,8 @@ struct Vector2i;
 class Graph;
 class DirectedGraph;
 class UndirectedGraph;
-struct DijkstraPath;
+struct MinDistance;
+class SpanningTree;
 
 class Sort
 {
@@ -87,10 +88,11 @@ public:
 class ShortestPath
 {
 public:
-    static DijkstraPath DijkstrasAlgorithm(Graph& graph, int vertex);
+    static MinDistance DijkstrasAlgorithm(Graph& graph, int vertex);
+    static MinDistance BellmanFordAlgorithm(DirectedGraph& graph, int vertex);
     static vector<int> shortestPath(Graph& graph, int fromVertex, int toVertex);
     static int shortestDistance(Graph& graph, int fromVertex, int toVertex);
-    static void shortestPaths(Graph& graph, int vertex);
+    static void shortestPaths(MinDistance minDistance, Graph &graph, int vertex);
 };
 
 class Print
@@ -104,7 +106,8 @@ public:
     static void printStack(Stack& stack);
     static void printVector(vector<int>& list);
     static void printBT(BTNode* root);
-    static void printGraph(Graph& graph);
+    static void printGraph(const Graph &graph);
+    static void printGraph(const SpanningTree& graph);
 };
 
 #endif //CLION_ALGORITHM_H

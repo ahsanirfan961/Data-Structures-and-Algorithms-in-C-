@@ -361,7 +361,7 @@ int Print::printTree(BTNode *tree, int is_left, int offset, int depth, char s[][
     return left + width + right;
 }
 
-void Print::printGraph(Graph &graph) {
+void Print::printGraph(const Graph &graph) {
     cout<<"Vertices: ";
     for(int i=0;i<graph.numVertices;i++)
         cout<<graph.vertices[i]<<", ";
@@ -369,6 +369,21 @@ void Print::printGraph(Graph &graph) {
     for(int i=0;i< graph.numVertices;i++)
     {
         for(int j=0;j<graph.numVertices;j++)
+        {
+            if(graph.edges[i][j]!=0)
+                cout<<graph.vertices[i]<<" -> "<<graph.vertices[j]<<" : "<<graph.edges[i][j]<<endl;
+        }
+    }
+}
+
+void Print::printGraph(const SpanningTree &graph) {
+    cout<<"Vertices: ";
+    for(int i=0;i<graph.getVertices();i++)
+        cout<<graph.vertices[i]<<", ";
+    cout<<endl<<"Edges: "<<endl;
+    for(int i=0;i< graph.getVertices();i++)
+    {
+        for(int j=0;j<graph.getVertices();j++)
         {
             if(graph.edges[i][j]!=0)
                 cout<<graph.vertices[i]<<" -> "<<graph.vertices[j]<<" : "<<graph.edges[i][j]<<endl;
@@ -666,8 +681,8 @@ bool Search::depthFirstSearch(Graph &graph, int startVertex, int endVertex) {
  *                                                                                         *
  *******************************************************************************************/
 
-DijkstraPath ShortestPath::DijkstrasAlgorithm(Graph &graph, int vertex) {
-    DijkstraPath dPath;
+MinDistance ShortestPath::DijkstrasAlgorithm(Graph &graph, int vertex) {
+    MinDistance dPath;
     int start = graph.hasIndex(vertex);
     int numVertices = graph.getVertices();
     bool marked[numVertices];
@@ -682,13 +697,15 @@ DijkstraPath ShortestPath::DijkstrasAlgorithm(Graph &graph, int vertex) {
     for(int i=0;i<numVertices-1;i++)
     {
         int minDistance = Graph::INF_EDGE;
-        int currentIndex = 0;
+        int currentIndex = Graph::INF_EDGE;
         for(int j=0;j<numVertices;j++)
             if(dPath.distance[j]<minDistance && !marked[j])
             {
                 minDistance = dPath.distance[j];
                 currentIndex = j;
             }
+        if(currentIndex == Graph::INF_EDGE)
+            break;
         marked[currentIndex] = true;
         int currentVertex = graph.getVertex(currentIndex);
         vector<int> adjacentVertices = graph.getAdjacentVertices(currentVertex);
@@ -706,33 +723,41 @@ DijkstraPath ShortestPath::DijkstrasAlgorithm(Graph &graph, int vertex) {
     return dPath;
 }
 
-void ShortestPath::shortestPaths(Graph &graph, int vertex) {
-    DijkstraPath dPath = DijkstrasAlgorithm(graph, vertex);
+void ShortestPath::shortestPaths(MinDistance minDistance, Graph &graph, int vertex) {
     for(int i=0;i<graph.getVertices();i++)
     {
         string path;
         int currentIndex = i;
         int current = graph.getVertex(i);
+        if(graph.getVertex(minDistance.prevVertex[i]) == vertex)
+        {
+            if(minDistance.distance[i]==Graph::INF_EDGE) {
+                path = "No path";
+                goto skip;
+            }
+        }
         while (true)
         {
             path+= to_string(current);
             if(current == vertex)
                 break;
             path += " >- ";
-            current = graph.getVertex(dPath.prevVertex[graph.hasIndex(current)]);
+            current = graph.getVertex(minDistance.prevVertex[graph.hasIndex(current)]);
         }
         std::reverse(path.begin(), path.end());
-        cout<<"Shortest path from vertex "<<vertex<<" to vertex "<<graph.getVertex(i)<<": "<<path<<"\t\tDistance: "<<dPath.distance[i]<<endl;
+        skip:
+        string d = minDistance.distance[i]==Graph::INF_EDGE ? "inf": to_string(minDistance.distance[i]);
+        cout<<"Shortest path from vertex "<<vertex<<" to vertex "<<graph.getVertex(i)<<": "<<path<<"\t\tDistance: "<<d<<endl;
     }
 }
 
 int ShortestPath::shortestDistance(Graph &graph, int fromVertex, int toVertex) {
-    DijkstraPath dPath = DijkstrasAlgorithm(graph, fromVertex);
+    MinDistance dPath = DijkstrasAlgorithm(graph, fromVertex);
     return dPath.distance[graph.hasIndex(toVertex)];
 }
 
 vector<int> ShortestPath::shortestPath(Graph &graph, int fromVertex, int toVertex) {
-    DijkstraPath dPath = DijkstrasAlgorithm(graph, fromVertex);
+    MinDistance dPath = DijkstrasAlgorithm(graph, fromVertex);
     vector<int> path;
     int current = toVertex;
     while (true)
@@ -744,4 +769,50 @@ vector<int> ShortestPath::shortestPath(Graph &graph, int fromVertex, int toVerte
     }
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+MinDistance ShortestPath::BellmanFordAlgorithm(DirectedGraph &graph, int vertex) {
+    MinDistance dPath;
+    int start = graph.hasIndex(vertex);
+    int numVertices = graph.getVertices();
+
+    for(int i=0;i<numVertices;i++)
+    {
+        dPath.prevVertex.push_back(start);
+        dPath.distance.push_back(Graph::INF_EDGE);
+    }
+    dPath.distance[start] = 0;
+
+    // find shortest path
+    for(int i=0;i<numVertices-1;i++)
+    {
+        MinDistance temp = dPath;
+        for(int j=0;j<numVertices;j++)
+            for(int k=0;k<numVertices;k++)
+            {
+                if(graph.edges[j][k]!=0)
+                    if(dPath.distance[k] > dPath.distance[j] + graph.edges[j][k] && dPath.distance[j]!=Graph::INF_EDGE)
+                    {
+                        temp.distance[k] = dPath.distance[j] + graph.edges[j][k];
+                        temp.prevVertex[k] = j;
+                    }
+            }
+        dPath = temp;
+    }
+
+    // check for negative cycle
+    for(int j=0;j<numVertices;j++)
+        for(int k=0;k<numVertices;k++)
+        {
+            if(graph.edges[j][k]!=0)
+                if(dPath.distance[k] > dPath.distance[j] + graph.edges[j][k] && dPath.distance[j]!=Graph::INF_EDGE)
+                {
+                    cout<<"Graph has a negative cycle!"<<endl
+                        <<"Paths cannot be calculated!"<<endl;
+                    for(auto& i:dPath.prevVertex)
+                        i = start;
+                    return dPath;
+                }
+        }
+    return dPath;
 }

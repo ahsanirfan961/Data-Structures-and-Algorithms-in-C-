@@ -668,7 +668,7 @@ vector<int> Graph::getAdjacentVertices(int vertex) {
     vector<int> v;
     for(int i=0;i<numVertices;i++)
     {
-        if(edges[index][i]>0)
+        if(edges[index][i]!=0)
             v.push_back(vertices[i]);
     }
     return v;
@@ -676,6 +676,15 @@ vector<int> Graph::getAdjacentVertices(int vertex) {
 
 int Graph::getVertex(int index) {
     return vertices[index];
+}
+
+bool Graph::isConnected() {
+    for(int i=0;i<numVertices;i++)
+        for(int j=0;j<numVertices;j++)
+            if(edges[i][j]!=0)
+                if (!Search::breadthFirstSearch(*this, getVertex(i), getVertex(j)))
+                    return false;
+    return true;
 }
 
 
@@ -722,5 +731,35 @@ void DirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
     else
     {
         edges[pos1][pos2] = weight;
+    }
+}
+
+SpanningTree::SpanningTree(Graph &graph): UndirectedGraph(graph.getVertices()) {
+    if(graph.getVertices()>0)
+    {
+        for(int i=0;i<graph.getVertices();i++)
+            vertices[i] = graph.vertices[i];
+        numVertices = graph.numVertices;
+        maxVertices = graph.maxVertices;
+        vector<bool> visited;
+        visited.reserve(graph.getVertices());
+        for(int i=0;i<graph.getVertices();i++)
+            visited.push_back(false);
+        makeSpanningTree(graph, visited, 0);
+    }
+}
+
+void SpanningTree::makeSpanningTree(Graph &graph, vector<bool> &visited, int start) {
+    visited[start] = true;
+    vector<int> adjacentVertices = graph.getAdjacentVertices(start);
+    int startIndex = graph.hasIndex(start);
+    for(auto &adjacent:adjacentVertices)
+    {
+        int adjacentIndex = graph.hasIndex(adjacent);
+        if(!visited[graph.hasIndex(adjacent)])
+        {
+            UndirectedGraph::addEdge(start, adjacent, graph.edges[startIndex][adjacentIndex]);
+            makeSpanningTree(graph, visited, adjacent);
+        }
     }
 }
