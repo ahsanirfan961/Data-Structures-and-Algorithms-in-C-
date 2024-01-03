@@ -294,13 +294,13 @@ void Print::printVector(vector<int> &list) {
     cout<<endl;
 }
 
-void Print::printBT(BTNode *root)
+void Print::printBT(BinaryTree &tree)
 {
-    char s[BTNode::maxDepth(root)*2][255];
+    char s[tree.height() * 2][255];
     for (auto & i : s)
         sprintf(i, "%80s", " ");
 
-    printTree(root, 0, 0, 0, s);
+    printTree(tree.root, 0, 0, 0, s);
 
     for (auto & i : s)
         printf("%s\n", i);

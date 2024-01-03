@@ -260,34 +260,83 @@ BTNode::BTNode(int data) {
     right = nullptr;
 }
 
-void BTNode::inOrder(BTNode *root) {
-    if(root == nullptr)
-        return;
-    inOrder(root->left);
-    cout<<root->data<<" ";
-    inOrder(root->right);
+/*******************************************************************************************
+ *                                                                                         *
+ *                          Implementation of Binary Tree class                            *
+ *                                                                                         *
+ *******************************************************************************************/
+
+BinaryTree::BinaryTree(int data) {
+    root = new BTNode(data);
 }
 
-int BTNode::maxDepth(BTNode *root) {
+void BinaryTree::inOrder() {
+    if(root == nullptr)
+        return;
+    BinaryTree(root->left).inOrder();
+    cout<<root->data<<" ";
+    BinaryTree(root->right).inOrder();
+}
+
+void BinaryTree::insert(int data) {
+    auto* toInsert = new BTNode(data);
+    if(root == nullptr)
+    {
+        root = toInsert;
+        return;
+    }
+    queue<BTNode*> queue;
+    queue.push(root);
+    while(!queue.empty())
+    {
+        BTNode* current = queue.front();
+        queue.pop();
+        if(current->left == nullptr)
+        {
+            current->left = toInsert;
+            return;
+        }
+        else if(current->right == nullptr)
+        {
+            current->right = toInsert;
+            return;
+        }
+        else
+        {
+            queue.push(current->left);
+            queue.push(current->right);
+        }
+    }
+}
+
+BTNode *BinaryTree::getRoot() {
+    return root;
+}
+
+int BinaryTree::height() {
     if(root== nullptr)
         return 0;
-    return 1+max(maxDepth(root->left), maxDepth(root->right));
+    return 1+max(BinaryTree(root->left).height(), BinaryTree(root->right).height());
 }
 
-void BTNode::preOrder(BTNode *root) {
+void BinaryTree::preOrder() {
     if(root == nullptr)
         return;
     cout<<root->data<<" ";
-    inOrder(root->left);
-    inOrder(root->right);
+    BinaryTree(root->left).preOrder();
+    BinaryTree(root->left).preOrder();
 }
 
-void BTNode::postOrder(BTNode *root) {
+void BinaryTree::postOrder() {
     if(root == nullptr)
         return;
-    inOrder(root->left);
-    inOrder(root->right);
+    BinaryTree(root->left).postOrder();
+    BinaryTree(root->left).postOrder();
     cout<<root->data<<" ";
+}
+
+void BinaryTree::remove(int data) {
+
 }
 
 /*******************************************************************************************
@@ -296,13 +345,9 @@ void BTNode::postOrder(BTNode *root) {
  *                                                                                         *
  *******************************************************************************************/
 
-BST::BST(int data) {
-    root = new BTNode(data);
-}
+BST::BST(int data) : BinaryTree(data){}
 
-BST::BST(BTNode *ref) {
-    root=ref;
-}
+BST::BST(BTNode *ref):BinaryTree(ref) {}
 
 void BST::insert(int data) {
     auto* q = new BTNode(data);
@@ -317,8 +362,10 @@ void BST::insert(int data) {
             parent = current;
             if(data>current->data)
                 current=current->right;
-            else
+            else if(data < current->data)
                 current=current->left;
+            else
+                return;
         }
         if(data>parent->data)
             parent->right=q;
@@ -327,29 +374,6 @@ void BST::insert(int data) {
     }
 }
 
-void BST::inOrder() {
-    BTNode::inOrder(root);
-    cout<<endl;
-}
-
-int BST::depth() {
-    return BTNode::maxDepth(root);
-}
-
-void BST::print() {
-    Print::printBT(root);
-    cout<<endl;
-}
-
-void BST::preOrder() {
-    BTNode::preOrder(root);
-    cout<<endl;
-}
-
-void BST::postOrder() {
-    BTNode::postOrder(root);
-    cout<<endl;
-}
 
 void BST::remove(int data) {
     BTNode* current = root;
@@ -458,6 +482,159 @@ bool BST::search(int data) {
     }
     return false;
 }
+
+BST::BST(BinaryTree &tree): BinaryTree() {
+    queue<BTNode*> queue;
+    queue.push(tree.getRoot());
+    while(!queue.empty())
+    {
+        BTNode* current = queue.front();
+        queue.pop();
+        insert(current->data);
+        if(current->left!= nullptr)
+            queue.push(current->left);
+        if(current->right!= nullptr)
+            queue.push(current->right);
+    }
+}
+
+/*******************************************************************************************
+ *                                                                                         *
+ *                          Implementation of AVL Tree class                               *
+ *                                                                                         *
+ *******************************************************************************************/
+
+AVL::AVL(int data) : BST(data) {
+    root = new BTNode(data);
+}
+
+AVL::AVL(BTNode *ref) : BST(ref){}
+
+bool AVL::isBalanced() {
+    int balanceFactor = getBalanceFactor();
+    return balanceFactor == 0 || balanceFactor == -1 || balanceFactor == 1;
+}
+
+BTNode *AVL::leftRotate() {
+    BTNode* temp = root;
+    root = root->right;
+    temp->right = root->left;
+    root->left = temp;
+    return root;
+}
+
+BTNode *AVL::rightRotate() {
+    BTNode* temp = root;
+    root = root->left;
+    temp->left = root->right;
+    root->right = temp;
+    return root;
+}
+
+
+int AVL::getBalanceFactor() {
+    return BinaryTree(root->left).height() - BinaryTree(root->right).height();
+}
+
+void AVL::remove(int data) {
+    BST::remove(data);
+}
+
+void AVL::insert(int data) {
+    if(root == nullptr)
+    {
+        BST::insert(data);
+    }
+    else
+    {
+        BTNode* current = root;
+        stack<BTNode*> successors;
+        while(current!= nullptr)
+        {
+            if (current->data > data) {
+                successors.push(current);
+                current = current->left;
+            } else if (current->data < data) {
+                successors.push(current);
+                current = current->right;
+            } else
+                return;
+        }
+
+        BST::insert(data);
+
+        while(!successors.empty())
+        {
+            BTNode* father = successors.top();
+            AVL fatherAVL(father);
+            successors.pop();
+            if(!fatherAVL.isBalanced())
+            {
+                fatherAVL.balance();
+                if(father==root)
+                    root = fatherAVL.getRoot();
+                else if(successors.top()->data>father->data)
+                    successors.top()->left = fatherAVL.getRoot();
+                else
+                    successors.top()->right = fatherAVL.getRoot();
+                return;
+            }
+        }
+    }
+//    if(root== nullptr)
+//    {
+//        root = new BTNode(data);
+//        return;
+//    }
+//
+//
+//    if(root->data > data)
+//    {
+//        AVL left(root->left);
+//        left.insert(data);
+//        root->left = left.getRoot();
+//    }
+//    else if(root->data < data)
+//    {
+//        AVL right(root->right);
+//        right.insert(data);
+//        root->right = right.getRoot();
+//    }
+//    else
+//        return;
+//
+//    balance();
+}
+
+void AVL::balance() {
+    if(!isBalanced())
+    {
+        int balanceFactor = getBalanceFactor();
+        if(balanceFactor>1)
+        {
+            AVL left(root->left);
+            if(AVL(left.getRoot()->left).height() > AVL(left.getRoot()->right).height())
+                root = rightRotate();
+            else
+            {
+                root->left = AVL(root->left).leftRotate();
+                root = rightRotate();
+            }
+        }
+        else
+        {
+            AVL right(root->right);
+            if(AVL(right.getRoot()->right).height() > AVL(right.getRoot()->left).height())
+                root = leftRotate();
+            else
+            {
+                root->right = AVL(root->right).rightRotate();
+                root = leftRotate();
+            }
+        }
+    }
+}
+
 
 /*******************************************************************************************
  *                                                                                         *
@@ -763,3 +940,5 @@ void SpanningTree::makeSpanningTree(Graph &graph, vector<bool> &visited, int sta
         }
     }
 }
+
+

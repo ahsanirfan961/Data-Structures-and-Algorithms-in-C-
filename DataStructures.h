@@ -4,10 +4,8 @@
 
 #ifndef DATA_STRUCTURES___ALGORITHMS_DATASTRUCTURES_H
 #define DATA_STRUCTURES___ALGORITHMS_DATASTRUCTURES_H
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 #include "Algorithm.h"
-#include <string>
 
 using namespace std;
 
@@ -94,31 +92,57 @@ struct BTNode
 
     BTNode():data(0), left(nullptr), right(nullptr){}
     explicit BTNode(int data);
-    static void inOrder(BTNode* root);
-    static void preOrder(BTNode* root);
-    static void postOrder(BTNode* root);
-    static int maxDepth(BTNode* root);
-
 };
 
-class BST
+class BinaryTree
 {
+protected:
     BTNode* root;
     friend class Print;
 public:
-    BST():root(nullptr){}
-    explicit BST(BTNode* ref);
-    explicit BST(int data);
-    void insert(int data);
-    void remove(int data);
+    BinaryTree():root(nullptr){}
+    explicit BinaryTree(BTNode* root):root(root){}
+    explicit BinaryTree(int data);
+    virtual ~BinaryTree()= default;
+    BTNode* getRoot();
+    virtual void insert(int data);
+    virtual void remove(int data);
     void inOrder();
     void preOrder();
     void postOrder();
+    int height();
+};
+
+class BST : public BinaryTree
+{
+protected:
+    explicit BST(BTNode* ref);
+public:
+    BST():BinaryTree(){}
+    explicit BST(int data);
+    explicit BST(BinaryTree& tree);
+    ~BST() override =default;
+    void insert(int data) override;
+    void remove(int data) override;
     int max();
     int min();
-    int depth();
     bool search(int data);
-    void print();
+};
+
+class AVL : public BST
+{
+    explicit AVL(BTNode* ref);
+    BTNode *leftRotate();
+    BTNode *rightRotate();
+    void balance();
+public:
+    AVL():BST(){}
+    explicit AVL(int data);
+    ~AVL() override=default;
+    int getBalanceFactor();
+    bool isBalanced();
+    void insert(int data) override;
+    void remove(int data) override;
 };
 
 class Heap

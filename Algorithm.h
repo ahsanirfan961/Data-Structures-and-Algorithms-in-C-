@@ -26,6 +26,7 @@ class DirectedGraph;
 class UndirectedGraph;
 struct MinDistance;
 class SpanningTree;
+class BinaryTree;
 
 class Sort
 {
@@ -105,7 +106,7 @@ public:
     static void printQueue(Queue& queue);
     static void printStack(Stack& stack);
     static void printVector(vector<int>& list);
-    static void printBT(BTNode* root);
+    static void printBT(BinaryTree &tree);
     static void printGraph(const Graph &graph);
     static void printGraph(const SpanningTree& graph);
 };
