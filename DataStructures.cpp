@@ -911,6 +911,12 @@ void DirectedGraph::addEdge(int vertex1, int vertex2, int weight) {
     }
 }
 
+/*******************************************************************************************
+ *                                                                                         *
+ *                     Implementation of Spanning Tree class                               *
+ *                                                                                         *
+ *******************************************************************************************/
+
 SpanningTree::SpanningTree(Graph &graph): UndirectedGraph(graph.getVertices()) {
     if(graph.getVertices()>0)
     {
@@ -941,4 +947,59 @@ void SpanningTree::makeSpanningTree(Graph &graph, vector<bool> &visited, int sta
     }
 }
 
+/*******************************************************************************************
+ *                                                                                         *
+ *                    Implementation of Disjoint Set Union class                           *
+ *                                                                                         *
+ *******************************************************************************************/
 
+DisjointSetUnion::DisjointSetUnion(int length)
+{
+    parent = new int[length];
+    rank = new int[length];
+    for(int i=0;i<length;i++)
+    {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+}
+
+int DisjointSetUnion::findSet(int vertex) {
+    if(parent[vertex]==vertex)
+        return vertex;
+    return parent[vertex] = findSet(parent[vertex]);
+}
+
+
+void DisjointSetUnion::unionSets(int vertex1, int vertex2) {
+    int parent1 = findSet(vertex1);
+    int parent2 = findSet(vertex2);
+    if (parent1 == parent2)
+        return;
+    if (rank[parent1] > rank[parent2])
+        parent[parent2] = parent1;
+    else if (rank[parent1] < rank[parent2])
+        parent[parent1] = parent2;
+    else {
+        parent[parent2] = parent1;
+        rank[parent1]++;
+    }
+}
+
+/*******************************************************************************************
+ *                                                                                         *
+ *               Implementation of Minimum Spanning Tree Union class                       *
+ *                                                                                         *
+ *******************************************************************************************/
+
+MinimumSpanningTree::MinimumSpanningTree(Graph &graph) : SpanningTree(graph) {
+    UndirectedGraph tree = ShortestPath::KruskalAlgorithm(graph);
+    numVertices = tree.numVertices;
+    maxVertices = tree.maxVertices;
+    for(int i=0;i<numVertices;i++)
+    {
+        vertices[i] = tree.vertices[i];
+        for(int j=0;j<numVertices;j++)
+            edges[i][j] = tree.edges[i][j];
+    }
+}

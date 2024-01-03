@@ -207,6 +207,7 @@ public:
 
 class UndirectedGraph : public Graph
 {
+    friend class MinimumSpanningTree;
 public:
     explicit UndirectedGraph(int size): Graph(size){}
     ~UndirectedGraph() override= default;
@@ -236,6 +237,23 @@ class SpanningTree : protected UndirectedGraph
 public:
     explicit SpanningTree(Graph& graph);
     ~SpanningTree() override = default;
+};
+
+class MinimumSpanningTree : public SpanningTree
+{
+public:
+    explicit MinimumSpanningTree(Graph& graph);
+    ~MinimumSpanningTree() override=default;
+};
+
+class DisjointSetUnion
+{
+    int *parent;
+    int *rank;
+public:
+    explicit DisjointSetUnion(int length);
+    int findSet(int vertex);
+    void unionSets(int vertex1, int vertex2);
 };
 
 class Utility

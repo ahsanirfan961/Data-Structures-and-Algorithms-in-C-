@@ -37,37 +37,25 @@ int main()
 //    graph.addEdge(2, 3, 2);
 //    graph.addEdge(3, 0, 3);
 
-    AVL tree;
-    tree.insert(90);
-    tree.insert(80);
-    tree.insert(70);
-    tree.insert(85);
-    tree.insert(82);
-    tree.insert(86);
-    tree.insert(100);
-    tree.insert(50);
-    tree.insert(20);
+    UndirectedGraph graph(4);
+    graph.addVertex(5);
+    graph.addVertex(6);
+    graph.addVertex(2);
+    graph.addVertex(0);
 
+    graph.addEdge(5,6,3);
+    graph.addEdge(6,2,1);
+    graph.addEdge(0,2,4);
+    graph.addEdge(5,0,8);
 
+    Print::printGraph(graph);
 
+    MinimumSpanningTree mst(graph);
+
+    Print::printGraph(mst);
 
     clock_t start = clock();
 
-    cout<<"Original Array:"<<endl;
-//    Print::printArray(array, 6);
-//    Print::printGraph(graph);
-//    DijkstraPath a = ShortestPath::dijkstra(graph, 0);
-//    Print::printVector(a.prevVertex);
-//    Print::printVector(a.distance);
-
-//    Print::printGraph(graph);
-//    SpanningTree tree(graph);
-//    Print::printGraph(tree);
-
-//    vector<int> adjacent = graph.getAdjacentVertices(10);
-//    Print::printVector(adjacent);
-    Print::printBT(tree);
-    cout<<endl;
 
 
 //    double timeElapsed = double(clock()-start)/CLOCKS_PER_SEC * 1000;

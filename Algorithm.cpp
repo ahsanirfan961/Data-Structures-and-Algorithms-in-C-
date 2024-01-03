@@ -572,9 +572,7 @@ bool Chess::solveKnightTour(int solution[8][8], int x, int y, vector<Vector2i> m
                 move--;
                 solution[next.x][next.y] = -1;
             }
-
         }
-
     }
     return false;
 }
@@ -815,4 +813,37 @@ MinDistance ShortestPath::BellmanFordAlgorithm(DirectedGraph &graph, int vertex)
                 }
         }
     return dPath;
+}
+
+UndirectedGraph ShortestPath::KruskalAlgorithm(Graph &graph) {
+
+    int graphSize = graph.getVertices();
+    UndirectedGraph mst(graphSize);
+    mst.numVertices = graph.getVertices();
+    mst.maxVertices = graph.maxVertices;
+    for(int i=0;i<graphSize;i++)
+        mst.vertices[i] = graph.vertices[i];
+    vector<vector<int>> edgeList;
+    for(int i=0;i< graphSize;i++)
+        for(int j=0;j<graphSize;j++) {
+            if(i<j)
+                continue;
+            if (graph.edges[i][j] != 0)
+                edgeList.push_back({graph.edges[i][j], graph.vertices[i], graph.vertices[j]});
+        }
+    sort(edgeList.begin(), edgeList.end());
+    DisjointSetUnion sets(Array::maxElement(graph.vertices, graphSize)+1);
+    for(auto& edge : edgeList)
+    {
+        int weight = edge[0];
+        int vertex1 = edge[1];
+        int vertex2 = edge[2];
+        if(sets.findSet(vertex1)!=sets.findSet(vertex2))
+        {
+            sets.unionSets(vertex1, vertex2);
+            mst.edges[graph.hasIndex(vertex1)][graph.hasIndex(vertex2)] = weight;
+            mst.edges[graph.hasIndex(vertex2)][graph.hasIndex(vertex1)] = weight;
+        }
+    }
+    return mst;
 }

@@ -94,6 +94,7 @@ public:
     static vector<int> shortestPath(Graph& graph, int fromVertex, int toVertex);
     static int shortestDistance(Graph& graph, int fromVertex, int toVertex);
     static void shortestPaths(MinDistance minDistance, Graph &graph, int vertex);
+    static UndirectedGraph KruskalAlgorithm(Graph& graph);
 };
 
 class Print
